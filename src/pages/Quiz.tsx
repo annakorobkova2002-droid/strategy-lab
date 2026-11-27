@@ -100,7 +100,7 @@ export function Quiz() {
             <button className="btn primary" onClick={() => setRunning({ ids: lecture ? [lecture] : undefined })}>Start</button>
             <button className="btn" onClick={() => setRunning({ due: true })}>Due reviews only</button>
           </div>
-          <p className="muted small">Shortcuts: press 1–4 to answer, Enter for the next question.</p>
+          <p className="muted small kbd-hint">Shortcuts: press 1–4 to answer, Enter for the next question.</p>
         </section>
       ) : (
         <>

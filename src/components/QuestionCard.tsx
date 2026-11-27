@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { Question } from "../types";
 import { presentOptions } from "../engine/select";
 import { lectureLabel } from "../data";
@@ -18,7 +18,21 @@ export function QuestionCard({ question: q, index, total, onAnswer, onNext }: Pr
   const options = useMemo(() => presentOptions(q), [q]);
   const [chosen, setChosen] = useState<string | null>(null);
 
-  useEffect(() => setChosen(null), [q.id]);
+  const cardRef = useRef<HTMLElement>(null);
+  const feedbackRef = useRef<HTMLDivElement>(null);
+  const smooth = () => (window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth");
+
+  // New question: bring the card back into view (matters on phones, where the previous feedback pushed it up).
+  useEffect(() => {
+    setChosen(null);
+    const top = cardRef.current?.getBoundingClientRect().top;
+    if (index > 0 && top !== undefined && top < 60) cardRef.current?.scrollIntoView({ block: "start", behavior: smooth() });
+  }, [q.id]);
+
+  // After answering: reveal the explanation and the Next button if they are below the fold.
+  useEffect(() => {
+    if (chosen) feedbackRef.current?.scrollIntoView({ block: "nearest", behavior: smooth() });
+  }, [chosen]);
 
   const choose = (id: string) => {
     if (chosen) return;
@@ -39,7 +53,7 @@ export function QuestionCard({ question: q, index, total, onAnswer, onNext }: Pr
 
   const correct = chosen === q.answer;
   return (
-    <article className="qcard" aria-live="polite">
+    <article className="qcard" aria-live="polite" ref={cardRef}>
       <div className="qmeta">
         <span>Question {index + 1} of {total}</span>
         <span className={`chip d${q.difficulty}`}>{DIFF[q.difficulty]}</span>
@@ -58,7 +72,7 @@ export function QuestionCard({ question: q, index, total, onAnswer, onNext }: Pr
         })}
       </div>
       {chosen && (
-        <div className={`feedback ${correct ? "ok" : "ko"}`}>
+        <div className={`feedback ${correct ? "ok" : "ko"}`} ref={feedbackRef}>
           <div className="feedback-title">{correct ? "Correct" : "Not quite"}</div>
           <p>{q.explanation}</p>
           {options.some((o) => o.why) && (
