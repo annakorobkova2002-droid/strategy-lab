@@ -1,0 +1,31 @@
+{
+  "name": "strategy-lab",
+  "version": "0.1.0",
+  "private": true,
+  "description": "STRATEGY LAB — Business Strategy exam preparation (Università Cattolica, A.Y. 2026–27)",
+  "type": "module",
+  "scripts": {
+    "content": "node scripts/build-content.mjs",
+    "build": "node scripts/build-content.mjs && node scripts/build-app.mjs",
+    "dev": "node scripts/build-content.mjs && node scripts/build-app.mjs --serve",
+    "test": "tsx --test tests/*.test.ts",
+    "typecheck": "tsc --noEmit",
+    "validate": "node scripts/build-content.mjs --check"
+  },
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "esbuild": "^0.28.2",
+    "marked": "^18.0.0",
+    "tsx": "^4.23.0",
+    "typescript": "^6.0.3"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
