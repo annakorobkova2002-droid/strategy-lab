@@ -23,7 +23,7 @@ export function LectureView({ id }: { id: string }) {
   const [tab, setTab] = useState<Tab>("Notes");
   useEffect(() => setTab("Notes"), [id]);
   useEffect(() => {
-    if (l) update((s) => ({ ...s, lectures: { ...s.lectures, [id]: { completed: false, confidence: 0, ...s.lectures[id], lastOpened: toDay() } } }));
+    if (l) update((s) => ({ ...s, lectures: { ...s.lectures, [id]: { ...(s.lectures[id] ?? { completed: false, confidence: 0 }), lastOpened: toDay() } } }));
   }, [id]);
   const questions = useMemo(() => content.questions.filter((q) => q.lecture === id), [id]);
   const cards = useMemo(() => content.flashcards.filter((c) => c.lecture === id), [id]);
